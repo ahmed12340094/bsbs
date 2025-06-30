@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدياتي - لعبة الروليت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, #000 150%);
+            opacity: 0.6;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: #ffcc00;
+            animation: pulse 2s infinite;
+        }
+        
+        .logo h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(to right, #ffcc00, #ff6b6b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #ffcc00;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .participants-section {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #ffcc00;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 204, 0, 0.5);
+        }
+        
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 8px 0 0 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .input-group button {
+            background: linear-gradient(to right, #ff6b6b, #ffcc00);
+            border: none;
+            padding: 0 20px;
+            border-radius: 0 8px 8px 0;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group button:hover {
+            background: linear-gradient(to right, #ff5252, #ffb900);
+        }
+        
+        .participants-list {
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+        
+        .participant-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #ffcc00;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .participant-name {
+            font-weight: 500;
+        }
+        
+        .remove-btn {
+            background: rgba(255, 0, 0, 0.3);
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .remove-btn:hover {
+            background: rgba(255, 0, 0, 0.6);
+        }
+        
+        .wheel-section {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%;
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            border: 8px solid rgba(255, 255, 255, 0.1);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+        
+        .wheel-pointer {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 60px;
+            background: #ffcc00;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 10;
+            filter: drop-shadow(0 0 5px rgba(255, 204, 0, 0.8));
+        }
+        
+        .spin-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: linear-gradient(to right, #ff6b6b, #ffcc00);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .spin-btn::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 20px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(25deg);
+            transition: all 0.7s;
+        }
+        
+        .spin-btn:hover::after {
+            left: 120%;
+        }
+        
+        .spin-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .spin-btn:disabled {
+            background: linear-gradient(to right, #777, #999);
+            cursor: not-allowed;
+        }
+        
+        .result-section {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-content {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            color: #ffcc00;
+            margin-bottom: 20px;
+        }
+        
+        .result-name {
+            font-size: 2rem;
+            margin: 15px 0;
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+        
+        .result-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            min-height: 80px;
+        }
+        
+        .result-label {
+            color: #ffcc00;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .telegram-btn {
+            background: linear-gradient(to right, #0088cc, #00aced);
+        }
+        
+        .instagram-btn {
+            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .about-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .about-btn:hover {
+            background: rgba(255, 204, 0, 0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: linear-gradient(to bottom right, #1a2a6c, #b21f1f);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 204, 0, 0.5);
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 0, 0, 0.3);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 0, 0, 0.6);
+        }
+        
+        .modal-title {
+            font-size: 2rem;
+            color: #ffcc00;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+        
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0);
+            animation: rippleEffect 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .participants-section, .result-section {
+                max-width: 100%;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-dice"></i>
+                <h1>تحدياتي - لعبة الروليت</h1>
+            </div>
+            <p class="tagline">اللعبة الأكثر تشويقاً وإحراجاً مع أصدقائك!</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="participants-section">
+                <h2 class="section-title">المشاركون</h2>
+                <div class="input-group">
+                    <input type="text" id="participant-name" placeholder="أدخل اسم المشارك">
+                    <button id="add-participant"><i class="fas fa-plus"></i> إضافة</button>
+                </div>
+                <div class="participants-list" id="participants-list">
+                    <!-- Participants will be added here -->
+                </div>
+            </div>
+            
+            <div class="wheel-section">
+                <div class="wheel-container">
+                    <div class="wheel" id="wheel">
+                        <!-- Wheel segments will be added by JS -->
+                    </div>
+                    <div class="wheel-pointer"></div>
+                </div>
+                <button class="spin-btn" id="spin-btn">دوران الروليت!</button>
+            </div>
+            
+            <div class="result-section">
+                <h2 class="section-title">نتيجة التحدي</h2>
+                <div class="result-content" id="result-content">
+                    <p>قم بإضافة المشاركين ثم اضغط على زر الدوران</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="social-buttons">
+            <a href="https://t.me/hoopis_6" class="social-btn telegram-btn" target="_blank">
+                <i class="fab fa-telegram"></i> تواصل عبر تلجرام
+            </a>
+            <a href="https://instagram.com/_92vt" class="social-btn instagram-btn" target="_blank">
+                <i class="fab fa-instagram"></i> تابعنا على إنستجرام
+            </a>
+        </div>
+        
+        <footer>
+            <button class="about-btn" id="about-btn">عن الموقع</button>
+            <p>© 2023 تحدياتي - جميع الحقوق محفوظة</p>
+        </footer>
+    </div>
+    
+    <div class="modal" id="about-modal">
+        <div class="modal-content">
+            <button class="close-btn" id="close-modal"><i class="fas fa-times"></i></button>
+            <h2 class="modal-title">عن لعبة تحدياتي</h2>
+            <p class="modal-text">
+                "تحدياتي" هي لعبة روليت ممتعة ومثيرة تهدف إلى إضفاء جو من المرح والتحدي بين الأصدقاء والعائلة. تقوم اللعبة بتوزيع المشاركين على عجلة الروليت الملونة، وعند الضغط على زر الدوران، يتم اختيار أحد المشاركين عشوائياً ليواجه سؤالاً محرجاً أو تحدياً ممتعاً.
+            </p>
+            <p class="modal-text">
+                تم تطوير هذا الموقع بواسطة [اسمك] بهدف إدخال البهجة والمرح على التجمعات العائلية واللقاءات مع الأصدقاء. فكرة اللعبة مستوحاة من الرغبة في كسر الحواجز بين الأفراد وتعزيز روح المرح والتحدي.
+            </p>
+            <p class="modal-text">
+                إذا واجهتك أي مشكلة أو كان لديك أي اقتراح، لا تتردد في التواصل معنا عبر وسائل التواصل المتوفرة.
+            </p>
+        </div>
+    </div>
+
+    <audio id="spin-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-slot-machine-spin-1044.mp3"></audio>
+    <audio id="win-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3"></audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Participants array
+            let participants = [];
+            const colors = [
+                '#FF6B6B', '#4ECDC4', '#FFD166', '#118AB2', '#06D6A0',
+                '#EF476F', '#FFC43D', '#1B9AAA', '#9B5DE5', '#00BBF9',
+                '#F15BB5', '#FEE440', '#00F5D4', '#9B5DE5', '#00BBF9'
+            ];
+            
+            // Questions and judgments arrays
+            const questions = [
+                "ما هو أكثر شيء محرج حدث لك في المدرسة؟",
+                "ما هو السر الذي لم تخبر به أحداً أبداً؟",
+                "صِف أسوأ موعد غرامي خضته في حياتك.",
+                "ما هو أغرب حلم رأيته واستيقظت محرجاً منه؟",
+                "ما الشيء الذي تخجل منه في مظهرك؟",
+                "ما هو أكبر كذبة قلتها لوالديك؟",
+                "ما هو أكثر شيء غبي فعلته لتبدو رائعاً؟",
+                "ما الشيء الذي تخجل من الاعتراف بأنك تخاف منه؟",
+                "ما هو أسوأ هدية تلقيتها في حياتك؟",
+                "ما هو أكثر شيء محرج حدث لك أثناء العمل؟",
+                "ما الشيء الذي تشعر بالخجل عند شرائه؟",
+                "ما هو أكثر موقف جعلك تبكي في الأماكن العامة؟",
+                "ما هو خطأ ارتكبته ولم تعترف به لأحد؟",
+                "ما هو أكثر شيء غبي كتبته على وسائل التواصل ولم تستطع حذفه بسرعة؟",
+                "ما هو أسوأ لقب أطلق عليك؟",
+                "ما هو أكثر شيء محرج فعلته لتعجب شخصاً أعجبك؟",
+                "ما الشيء الذي تخشى الاعتراف بأنك لا تعرفه؟",
+                "ما هو أكبر مبلغ سرقته في طفولتك؟",
+                "ما هو أسوأ تعليق تلقيت على صورتك؟",
+                "ما هو أكثر شيء محرج فعلته وأنت تحت تأثير الكحول؟",
+                "ما هو الشيء الذي تعلمته متأخراً جداً في الحياة؟",
+                "ما هو أسوأ قرار اتخذته في حياتك؟",
+                "ما هو أكثر شيء غبي سمعته من معلمك؟",
+                "ما هو الشيء الذي لا تتحمله في نفسك؟",
+                "ما هو أسوأ رد فعل فعلته أمام حبيبك؟",
+                "ما هو أكثر موقف جعلك تشعر بالخزي؟",
+                "ما هو الشيء الذي تخجل من الاعتراف بأنك تحبه؟",
+                "ما هو أسوأ شيء فعلته لصديق ولم يعرف أنه أنت؟",
+                "ما هو أكثر شيء محرج قمت به لتجنب شخص؟",
+                "ما هو الشيء الذي تخشى أن يكتشفه الناس عنك؟",
+                "ما هو أسوأ عذر استخدمته للتهرب من عمل؟",
+                "ما هو أكثر شيء محرج حدث لك أثناء ممارسة الرياضة؟",
+                "ما هو الشيء الذي تندم عليه كل يوم؟",
+                "ما هو أسوأ هروب قمت به من موقف؟",
+                "ما هو أكثر شيء غبي صدقته في طفولتك؟",
+                "ما هو الشيء الذي تخجل من الاعتراف بأنك لا تجيده؟",
+                "ما هو أسوأ صفة في شخصيتك؟",
+                "ما هو أكثر موقف جعلك تكره نفسك؟",
+                "ما هو الشيء الذي تخجل من الاعتراف بأنك تتمناه؟",
+                "ما هو أسوأ نقد تلقته من رئيسك؟",
+                "ما هو أكثر شيء محرج حدث لك في حفل زفاف؟",
+                "ما هو الشيء الذي تخشى الاعتراف بأنك تتمنى زواله؟",
+                "ما هو أكبر سرقة أدبية قمت بها؟",
+                "ما هو أسوأ كذبة اكتشفها والديك؟",
+                "ما هو أكثر شيء محرج حدث لك في المطار؟",
+                "ما هو الشيء الذي تخجل من الاعتراف بأنك لا تفهمه؟",
+                "ما هو أسوأ شعور شعرت به تجاه صديق؟",
+                "ما هو أكثر موقف جعلك تشعر بالغباء؟",
+                "ما هو الشيء الذي تخشى الاعتراف بأنك تشتهيه؟"
+            ];
+            
+            const judgments = [
+                "قفز 10 مرات على قدم واحدة وأنت تغني النشيد الوطني",
+                "أرسل رسالة حب لأول شخص في قائمة جهات الاتصال لديك",
+                "قلب وجهك بالكامل بالماكياج لمدة ساعة",
+                "ارقص رقصة البطريق لمدة دقيقتين",
+                "انثر ملح على لسانك ولا تشرب لمدة 5 دقائق",
+                "ارتدِ ملابسك بالمقلوب لمدة ساعة",
+                "قل 10 مدائح غريبة لأقرب شخص لك",
+                "امشِ كالدمية لمدة 5 دقائق",
+                "تظاهر بأنك كلب لمدة دقيقتين",
+                "غيّر صورتك على وسائل التواصل إلى صورة محرجة لمدة 24 ساعة",
+                "قل كل جملة كأنك بحر شديد لمدة 10 دقائق",
+                "ارسم شارباً بقلم دائم على وجهك لبقية اليوم",
+                "اطلب من الغرباء أن يوقّعوا على قميصك",
+                "قلب حرف السين إلى شين في كل كلمة لمدة 10 دقائق",
+                "اتصل بصديق وغنّ له أغنية أطفال",
+                "امشِ إلى الخلف في كل تحركاتك لمدة 15 دقيقة",
+                "أطعم الشخص الذي بجانبك وأنت معصوب العينين",
+                "انشر منشوراً على وسائل التواصل بأنك تحب البروكلي",
+                "تحدث بلكنة أجنبية لمدة 30 دقيقة",
+                "اربط شعرك بأغرب طريقة ممكنة لبقية الجلسة",
+                "اشرب كوب ماء وأنت واقف على رأسك (بمساعدة الآخرين)",
+                "تظاهر بأنك روبوت في كل تحركاتك لمدة 10 دقائق",
+                "انقل كل شيء تقوله بطريقة غنائية لمدة 15 دقيقة",
+                "تحدث بصوت عالٍ جداً لمدة 5 دقائق",
+                "قلب كل كلمة تقولها رأساً على عقب لمدة 10 دقائق",
+                "امسح أرضية الغرفة بمنشفة وقدميك",
+                "احمل الشخص الأصغر في المجموعة لمدة دقيقتين",
+                "انشر صورة طفولتك المحرجة على وسائل التواصل",
+                "اختبئ في الخزانة لمدة 5 دقائق",
+                "قلب حذائك وارتديه على اليدين لمدة 10 دقائق"
+            ];
+            
+            // DOM Elements
+            const participantInput = document.getElementById('participant-name');
+            const addParticipantBtn = document.getElementById('add-participant');
+            const participantsList = document.getElementById('participants-list');
+            const wheel = document.getElementById('wheel');
+            const spinBtn = document.getElementById('spin-btn');
+            const resultContent = document.getElementById('result-content');
+            const aboutBtn = document.getElementById('about-btn');
+            const aboutModal = document.getElementById('about-modal');
+            const closeModal = document.getElementById('close-modal');
+            const spinSound = document.getElementById('spin-sound');
+            const winSound = document.getElementById('win-sound');
+            
+            // Add ripple effect to buttons
+            document.querySelectorAll('button, .social-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = `${size}px`;
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Add participant function
+            addParticipantBtn.addEventListener('click', function() {
+                const name = participantInput.value.trim();
+                if (name && participants.length < 15) {
+                    participants.push(name);
+                    participantInput.value = '';
+                    renderParticipants();
+                    renderWheel();
+                } else if (participants.length >= 15) {
+                    alert('لقد وصلت للحد الأقصى من المشاركين (15)');
+                }
+            });
+            
+            // Render participants list
+            function renderParticipants() {
+                participantsList.innerHTML = '';
+                participants.forEach((participant, index) => {
+                    const participantItem = document.createElement('div');
+                    participantItem.className = 'participant-item';
+                    participantItem.innerHTML = `
+                        <span class="participant-name">${participant}</span>
+                        <button class="remove-btn" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    participantsList.appendChild(participantItem);
+                });
+                
+                // Add event listeners to remove buttons
+                document.querySelectorAll('.remove-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const index = parseInt(this.getAttribute('data-index'));
+                        participants.splice(index, 1);
+                        renderParticipants();
+                        renderWheel();
+                    });
+                });
+            }
+            
+            // Render wheel
+            function renderWheel() {
+                wheel.innerHTML = '';
+                
+                if (participants.length === 0) {
+                    wheel.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100%; color:white; font-size:1.2rem;">أضف مشاركين لبدء اللعبة</div>';
+                    spinBtn.disabled = true;
+                    return;
+                }
+                
+                spinBtn.disabled = false;
+                
+                const segmentAngle = 360 / participants.length;
+                
+                participants.forEach((_, index) => {
+                    const segment = document.createElement('div');
+                    segment.style.position = 'absolute';
+                    segment.style.top = '0';
+                    segment.style.left = '0';
+                    segment.style.width = '100%';
+                    segment.style.height = '100%';
+                    segment.style.clipPath = `polygon(50% 50%, ${50 + 50 * Math.cos((index * segmentAngle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin((index * segmentAngle - 90) * Math.PI / 180)}%, ${50 + 50 * Math.cos(((index + 1) * segmentAngle - 90) * Math.PI / 180)}% ${50 + 50 * Math.sin(((index + 1) * segmentAngle - 90) * Math.PI / 180)}%)`;
+                    segment.style.backgroundColor = colors[index % colors.length];
+                    segment.style.transformOrigin = 'center';
+                    segment.style.transform = `rotate(${index * segmentAngle}deg)`;
+                    segment.setAttribute('data-index', index);
+                    
+                    wheel.appendChild(segment);
+                });
+            }
+            
+            // Spin the wheel
+            spinBtn.addEventListener('click', function() {
+                if (participants.length < 2) {
+                    alert('أضف مشاركين على الأقل لبدء اللعبة!');
+                    return;
+                }
+                
+                spinBtn.disabled = true;
+                spinSound.play();
+                
+                // Generate random rotation (at least 5 full rotations)
+                const spins = 5 + Math.floor(Math.random() * 3);
+                const segmentAngle = 360 / participants.length;
+                const randomSegment = Math.floor(Math.random() * participants.length);
+                
+                // Calculate final rotation (land on the selected segment)
+                const finalRotation = spins * 360 + (randomSegment * segmentAngle) - (segmentAngle / 2);
+                
+                // Apply rotation with animation
+                wheel.style.transform = `rotate(${finalRotation}deg)`;
+                
+                // After animation, show result
+                setTimeout(() => {
+                    winSound.play();
+                    showResult(randomSegment);
+                    spinBtn.disabled = false;
+                }, 4000);
+            });
+            
+            // Show result
+            function showResult(participantIndex) {
+                const participantName = participants[participantIndex];
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                const randomJudgment = judgments[Math.floor(Math.random() * judgments.length)];
+                
+                resultContent.innerHTML = `
+                    <p class="result-label">المشارك المختار:</p>
+                    <p class="result-name">${participantName}</p>
+                    <p class="result-label">السؤال:</p>
+                    <p class="result-text">${randomQuestion}</p>
+                    <p class="result-label">الحكم:</p>
+                    <p class="result-text">${randomJudgment}</p>
+                    <p class="result-label">التحدي:</p>
+                    <p class="result-text">إذا لم تتمكن من الإجابة على السؤال، يجب عليك تنفيذ الحكم!</p>
+                `;
+            }
+            
+            // Modal functionality
+            aboutBtn.addEventListener('click', function() {
+                aboutModal.style.display = 'flex';
+            });
+            
+            closeModal.addEventListener('click', function() {
+                aboutModal.style.display = 'none';
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === aboutModal) {
+                    aboutModal.style.display = 'none';
+                }
+            });
+            
+            // Initial render
+            renderWheel();
+        });
+    </script>
+</body>
+</html>
